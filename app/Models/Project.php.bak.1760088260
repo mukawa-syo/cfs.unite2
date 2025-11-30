@@ -1,0 +1,104 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Reward;
+use App\Models\User;
+use App\Models\Category;
+use App\Models\ProjectUpdate;
+
+class Project extends Model
+{
+    use HasFactory;
+
+    protected $table = 'projects';
+    protected $primaryKey = 'id';
+    // routeKeyName は id を使う（存在しない project_id を使わない）
+    protected $routeKeyName = 'id';
+
+    // ★ DBに実在する列名でそろえる
+    protected $fillable = [
+        'title',
+        'description',
+        'goal_amount',
+        'deadline',
+        'project_category_id',
+        'user_id',
+        'status',
+        'is_featured',
+    ];
+
+    protected $casts = [
+        'deadline'    => 'date',
+        'is_featured' => 'boolean',
+        'goal_amount' => 'decimal:2',
+    ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('deadline', '>=', now()->startOfDay());
+    }
+
+    public function isActive()
+    {
+        return $this->deadline >= now()->startOfDay();
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'project_category_id');
+    }
+
+    public function rewards()
+    {
+        return $this->hasMany(Reward::class);
+    }
+
+    public function updates()
+    {
+        return $this->hasMany(ProjectUpdate::class);
+    }
+
+    public function supporters()
+    {
+        return $this->belongsToMany(User::class, 'supports', 'project_id', 'user_id')
+            ->withTimestamps()
+            ->withPivot('amount');
+    }
+
+    public function supports()
+    {
+        return $this->hasMany(\App\Models\Support::class, 'project_id', 'id');
+    }
+
+    public function getTotalPledgeAmountAttribute()
+    {
+        return $this->supports()->sum('amount');
+    }
+
+    public function getTotalBackersAttribute()
+    {
+        return $this->supports()->distinct('user_id')->count('user_id');
+    }
+
+    public function getProgressPercentageAttribute()
+    {
+        if ($this->goal_amount <= 0) {
+            return 0;
+        }
+        return min(100, round(($this->total_pledge_amount / $this->goal_amount) * 100));
+    }
+
+    // 画像カラムはDBに無いので accessor は一旦無効化 or null を返す
+    public function getImageUrlAttribute()
+    {
+        return null;
+    }
+}

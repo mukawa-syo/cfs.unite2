@@ -1,0 +1,116 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::disableForeignKeyConstraints();
+        
+        Schema::table('orders', function (Blueprint $table) {
+            // 外部キー制約を削除
+            $table->dropForeign(['supporter_id']);
+            // supporter_idカラムを削除
+            $table->dropColumn('supporter_id');
+        });
+
+        Schema::enableForeignKeyConstraints();
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::disableForeignKeyConstraints();
+        
+        Schema::table('orders', function (Blueprint $table) {
+            // supporter_idカラムを再追加
+            $table->unsignedInteger('supporter_id')->after('session_id');
+            // 外部キー制約を再追加
+            $table->foreign('supporter_id')->references('supporter_id')->on('supporters');
+        });
+
+        Schema::enableForeignKeyConstraints();
+    }
+};
+
+    {
+        Schema::disableForeignKeyConstraints();
+        
+        Schema::table('orders', function (Blueprint $table) {
+            // supporter_idカラムを再追加
+            $table->unsignedInteger('supporter_id')->after('session_id');
+            // 外部キー制約を再追加
+            $table->foreign('supporter_id')->references('supporter_id')->on('supporters');
+        });
+
+        Schema::enableForeignKeyConstraints();
+    }
+};
+
+    {
+        Schema::disableForeignKeyConstraints();
+        
+        Schema::table('orders', function (Blueprint $table) {
+            // supporter_idカラムを再追加
+            $table->unsignedInteger('supporter_id')->after('session_id');
+            // 外部キー制約を再追加
+            $table->foreign('supporter_id')->references('supporter_id')->on('supporters');
+        });
+
+        Schema::enableForeignKeyConstraints();
+    }
+};
+
+    {
+        Schema::disableForeignKeyConstraints();
+        
+        Schema::table('orders', function (Blueprint $table) {
+            // supporter_idカラムを再追加
+            $table->unsignedInteger('supporter_id')->after('session_id');
+            // 外部キー制約を再追加
+            $table->foreign('supporter_id')->references('supporter_id')->on('supporters');
+        });
+
+        Schema::enableForeignKeyConstraints();
+    }
+};
+
+    {
+        Schema::disableForeignKeyConstraints();
+        
+        Schema::table('orders', function (Blueprint $table) {
+            // supporter_idカラムを再追加
+            $table->unsignedInteger('supporter_id')->after('session_id');
+            // 外部キー制約を再追加
+            $table->foreign('supporter_id')->references('supporter_id')->on('supporters');
+        });
+
+        Schema::enableForeignKeyConstraints();
+    }
+};
+
+    {
+        Schema::disableForeignKeyConstraints();
+        
+        Schema::table('orders', function (Blueprint $table) {
+            // supporter_idカラムを再追加
+            $table->unsignedInteger('supporter_id')->after('session_id');
+            // 外部キー制約を再追加
+            $table->foreign('supporter_id')->references('supporter_id')->on('supporters');
+        });
+
+        Schema::enableForeignKeyConstraints();
+    }
+};

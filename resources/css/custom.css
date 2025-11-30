@@ -1,0 +1,41 @@
+/* Bodyのデフォルトフォントと背景色 */
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* ヘッダーのカスタマイズ */
+header {
+    background-color: #343a40;
+    color: #fff;
+    padding: 15px 0;
+}
+
+header .nav a {
+    color: #fff;
+    margin: 0 15px;
+}
+
+header .nav a:hover {
+    text-decoration: underline;
+}
+
+/* メインコンテンツのパディング */
+.main-content {
+    padding: 20px;
+}
+
+/* ボタンのカスタマイズ */
+.btn-custom {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.btn-custom:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}

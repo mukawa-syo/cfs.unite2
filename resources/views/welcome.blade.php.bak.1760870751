@@ -1,0 +1,671 @@
+@extends('layouts.app')
+
+@section('content')
+    <style>
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 50%, #3730a3 100%);
+            padding: 8rem 0 6rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-section h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-section p {
+            font-size: 1.25rem;
+            opacity: 0.95;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero-btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-btn-primary {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #d97706 100%);
+            color: white;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero-btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+            color: white;
+        }
+
+        .hero-btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .floating-element:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            font-size: clamp(1.75rem, 3vw, 2.5rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+
+        /* Project Cards */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .project-card {
+            background: var(--bg-primary);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover .project-image {
+            transform: scale(1.05);
+        }
+
+        .project-content {
+            padding: 1.75rem;
+        }
+
+        .project-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+        }
+
+        .project-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.6;
+        }
+
+        .project-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .project-meta i {
+            color: var(--primary-color);
+        }
+
+        .progress-container {
+            margin: 1.5rem 0;
+        }
+
+        .progress {
+            height: 8px;
+            background-color: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .project-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background: var(--bg-tertiary);
+            transform: translateY(-2px);
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1.25rem;
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Categories Section */
+        .categories-section {
+            background: var(--bg-secondary);
+            padding: 5rem 0;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .category-card {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .category-card:hover::before {
+            opacity: 0.05;
+        }
+
+        .category-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .category-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .category-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary-color);
+            background: var(--bg-secondary);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover .category-icon {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .category-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .category-count {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Featured Badge */
+        .featured-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #d97706 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 6rem 0 4rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .categories-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        /* Loading Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .fade-in:nth-child(2) { animation-delay: 0.1s; }
+        .fade-in:nth-child(3) { animation-delay: 0.2s; }
+        .fade-in:nth-child(4) { animation-delay: 0.3s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .supporter-voice-section {
+            background: #f8fafc;
+            padding: 4rem 0 3rem;
+        }
+        .supporter-voice-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2563eb;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .supporter-voices {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+        .supporter-voice-card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+            padding: 2rem 1.5rem;
+            max-width: 340px;
+            min-width: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .supporter-voice-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+        }
+        .supporter-voice-name {
+            font-weight: 600;
+            color: #2563eb;
+            margin-bottom: 0.5rem;
+        }
+        .supporter-voice-text {
+            color: #374151;
+            font-size: 1rem;
+            text-align: center;
+        }
+    </style>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="fade-in">地域とつながる<br>新しい挑戦を応援</h1>
+                <p class="fade-in">あなたの一歩が、誰かの未来に。<br>八王子ユナイトスポーツクラブは、地域のつながりと多様な挑戦を応援します。</p>
+                <div class="hero-buttons fade-in">
+                    <a href="{{ route('projects.index') }}" class="hero-btn hero-btn-primary">
+                        <i class="fas fa-rocket me-2"></i>プロジェクトを探す
+                    </a>
+                    <a href="{{ route('projects.create') }}" class="hero-btn hero-btn-secondary">
+                        <i class="fas fa-plus me-2"></i>プロジェクトを作成
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Projects Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">注目のプロジェクト</h2>
+        <div class="projects-grid">
+                @foreach($featuredProjects as $project)
+                    <div class="project-card fade-in">
+                        @if($project->is_featured)
+                            <div class="featured-badge">
+                                <i class="fas fa-star me-1"></i>注目
+                            </div>
+                        @endif
+                        <div style="width: 100%; height: 200px; background-color: #f8f9fa; border: 2px solid #dee2e6; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #6c757d;">No Image</div>
+                             alt="{{ $project->project_name }}" 
+                             class="project-image">
+                        <div class="project-content">
+                            <div class="project-meta">
+                                <span><i class="fas fa-folder me-1"></i>{{ $project->category->category_name ?? '未分類' }}</span>
+                                <span><i class="fas fa-clock me-1"></i>{{ $project->remaining_days }}日</span>
+                            </div>
+                            <h3 class="project-title">{{ $project->project_name }}</h3>
+                            <p class="project-description">{{ Str::limit($project->description, 120) }}</p>
+                            
+                            <div class="progress-container">
+                            <div class="progress">
+                                    <div class="progress-bar" style="width: {{ min(($project->total_pledge_amount / $project->target_pledge_amount) * 100, 100) }}%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="project-stats">
+                                <div class="stat-item">
+                                    <span class="stat-value">{{ number_format($project->total_pledge_amount) }}円</span>
+                                    <span class="stat-label">達成額</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value">{{ $project->progress_percentage }}%</span>
+                                    <span class="stat-label">達成率</span>
+                                </div>
+                            </div>
+                            
+                            <a href="{{ route('projects.show', $project) }}" class="btn btn-primary w-100 mt-3">
+                                <i class="fas fa-heart me-2"></i>支援する
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            
+            <div class="text-center">
+                <a href="{{ route('projects.index') }}" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-search me-2"></i>すべてのプロジェクトを見る
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories-section">
+        <div class="container">
+            <h2 class="section-title">カテゴリから探す</h2>
+            <div class="categories-grid">
+                @foreach($categories as $category)
+                    <a href="{{ route('projects.category', $category->project_category_id) }}" class="category-card fade-in">
+                        <div class="category-content">
+                            <div class="category-icon">
+                                <i class="fas fa-{{ $category->icon ?? 'folder' }}"></i>
+                            </div>
+                            <div class="category-name">{{ $category->category_name }}</div>
+                            <div class="category-count">{{ $category->projects_count ?? 0 }}件のプロジェクト</div>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Projects Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">最新のプロジェクト</h2>
+        <div class="projects-grid">
+                        <div style="width: 100%; height: 200px; background-color: #f8f9fa; border: 2px solid #dee2e6; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #6c757d;">No Image</div>
+                    <div class="project-card fade-in">
+                        <div class="project-image-placeholder" style="width: 100%; height: 200px; background-color: #f8f9fa; border: 2px solid #dee2e6; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #6c757d;">No Image</div>
+                                 alt="{{ $project->project_name }}" 
+                                 class="project-image">
+                        <div class="project-content">
+                            <div class="project-meta">
+                                <span><i class="fas fa-folder me-1"></i>{{ $project->category->category_name ?? '未分類' }}</span>
+                                <span><i class="fas fa-clock me-1"></i>{{ $project->remaining_days }}日</span>
+                            </div>
+                            <h3 class="project-title">{{ $project->project_name }}</h3>
+                            <p class="project-description">{{ Str::limit($project->description, 120) }}</p>
+                            
+                            <div class="progress-container">
+                            <div class="progress">
+                                    <div class="progress-bar" style="width: {{ min(($project->total_pledge_amount / $project->target_pledge_amount) * 100, 100) }}%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="project-stats">
+                                <div class="stat-item">
+                                    <span class="stat-value">{{ number_format($project->total_pledge_amount) }}円</span>
+                                    <span class="stat-label">達成額</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value">{{ $project->progress_percentage }}%</span>
+                                    <span class="stat-label">達成率</span>
+                                </div>
+                            </div>
+                            
+                            <a href="{{ route('projects.show', $project) }}" class="btn btn-primary w-100 mt-3">
+                                <i class="fas fa-heart me-2"></i>支援する
+                            </a>
+                        </div>
+            @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- 支援者の声セクション -->
+    <section class="supporter-voice-section">
+        <div class="container">
+            <div class="supporter-voice-title">みんなの声・つながり</div>
+            <div class="supporter-voices">
+                <div class="supporter-voice-card">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="supporter-voice-avatar" alt="支援者A">
+                    <div class="supporter-voice-name">支援者Aさん</div>
+                    <div class="supporter-voice-text">地域の仲間と一緒に新しい挑戦を応援できて、とても充実した気持ちになりました！</div>
+                                </div>
+                <div class="supporter-voice-card">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="supporter-voice-avatar" alt="支援者B">
+                    <div class="supporter-voice-name">支援者Bさん</div>
+                    <div class="supporter-voice-text">初めての支援でも安心して参加できました。みんなの活動が日々の楽しみです。</div>
+                        </div>
+                <div class="supporter-voice-card">
+                    <img src="https://randomuser.me/api/portraits/men/65.jpg" class="supporter-voice-avatar" alt="支援者C">
+                    <div class="supporter-voice-name">支援者Cさん</div>
+                    <div class="supporter-voice-text">このクラブのおかげで、地域のつながりがどんどん広がっています！</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.animationPlayState = 'paused';
+            observer.observe(el);
+        });
+    </script>
+@endsection
